@@ -3,6 +3,7 @@ import { usePlayerPopulation } from "./hooks/usePlayerPopulation";
 import { useSimulationData } from "./hooks/useSimulationData";
 import { RankDistributionBarChart } from "./components/RankDistributionBarChart";
 import { KeyPlayersSection } from "./components/KeyPlayersSection";
+import { PlayerExplorer } from "./components/PlayerExplorer";
 import "./App.css";
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
         )}
 
         {simulation.data && <KeyPlayersSection simulation={simulation.data} />}
+        {simulation.data && <PlayerExplorer simulation={simulation.data} />}
       </main>
     </div>
   );

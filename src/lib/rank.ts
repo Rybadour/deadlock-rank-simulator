@@ -22,6 +22,16 @@ function pointsToPromoteFrom(subrank: Subrank): number {
   return subrank === 6 ? 2000 : 1000;
 }
 
+// Cumulative points spent to reach a given subrank from subrank I of its
+// tier: five 1000-point promotions (I->II ... V->VI) plus subrank VI's own
+// span, which is 2000 wide since promoting OUT of VI costs 2000. A tier
+// therefore spans 7000 total, not 6000 — get this wrong and rankScore()
+// jumps backwards for any state that crosses a tier boundary.
+function subrankSpanStart(subrank: Subrank): number {
+  return subrank <= 5 ? (subrank - 1) * 1000 : 5000;
+}
+const TIER_SPAN = 7000;
+
 export function createInitialRankState(): RankState {
   return { rank: "Initiate", subrank: 1, winStreak: 0, rankPoints: 0, pointsToPromote: pointsToPromoteFrom(1) };
 }
@@ -29,7 +39,7 @@ export function createInitialRankState(): RankState {
 // Total ordering over rank states, useful for matchmaking and charting.
 export function rankScore(state: RankState): number {
   const tierIndex = RANK_TIER_ORDER.indexOf(state.rank);
-  return tierIndex * 6 * 1000 + (state.subrank - 1) * 1000 + state.rankPoints;
+  return tierIndex * TIER_SPAN + subrankSpanStart(state.subrank) + state.rankPoints;
 }
 
 // Bonus rank points awarded on top of the base +250 for winning while on a
@@ -50,11 +60,11 @@ export function formatRankState(state: RankState): string {
 // back into a RankState. maxTierIndex lets callers cap the range, e.g. for
 // calibration placement, which never places a player above Oracle.
 function rankStateFromScore(score: number, maxTierIndex: number): RankState {
-  const clamped = clamp(score, 0, (maxTierIndex + 1) * 6000 - 1);
-  const tierIndex = clamp(Math.floor(clamped / 6000), 0, maxTierIndex);
-  const remainder = clamped - tierIndex * 6000;
-  const subrank = (clamp(Math.floor(remainder / 1000), 0, 5) + 1) as Subrank;
-  const rankPoints = Math.round(remainder - (subrank - 1) * 1000);
+  const clamped = clamp(score, 0, (maxTierIndex + 1) * TIER_SPAN - 1);
+  const tierIndex = clamp(Math.floor(clamped / TIER_SPAN), 0, maxTierIndex);
+  const remainder = clamped - tierIndex * TIER_SPAN;
+  const subrank = (remainder < 5000 ? Math.floor(remainder / 1000) + 1 : 6) as Subrank;
+  const rankPoints = Math.round(remainder - subrankSpanStart(subrank));
   return { rank: RANK_TIER_ORDER[tierIndex], subrank, winStreak: 0, rankPoints, pointsToPromote: pointsToPromoteFrom(subrank) };
 }
 
@@ -72,7 +82,7 @@ const CALIBRATION_CEILING_TIER_INDEX = RANK_TIER_ORDER.indexOf("Oracle");
 // percentile (0 = worst in the population, 1 = best) with noise, since
 // calibration performance isn't a perfect predictor of true skill.
 export function createPlacementRankState(skillPercentile: number, noise = 0): RankState {
-  const maxScore = (CALIBRATION_CEILING_TIER_INDEX + 1) * 6000;
+  const maxScore = (CALIBRATION_CEILING_TIER_INDEX + 1) * TIER_SPAN;
   const score = clamp(skillPercentile * maxScore + noise, 0, maxScore - 1);
   return rankStateFromScore(score, CALIBRATION_CEILING_TIER_INDEX);
 }

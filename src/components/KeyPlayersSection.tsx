@@ -1,7 +1,7 @@
 import type { SimulationData } from "../types/simulation";
-import type { RankState } from "../types/rank";
 import { selectKeyPlayers, type Level } from "../lib/keyPlayers";
 import { formatRankState, rankScore } from "../lib/rank";
+import { RankDelta, rankChangeSentence } from "./RankDelta";
 import "./viz.css";
 import "./KeyPlayersSection.css";
 
@@ -11,35 +11,6 @@ interface Props {
 
 function levelLabel(level: Level, axis: "play rate" | "win rate"): string {
   return `${level === "low" ? "Low" : "High"} ${axis}`;
-}
-
-// includes rank points so two states in the same subrank (e.g. Sentinel IV
-// early vs. late) still read as visibly different, not a no-op change
-function detailedLabel(state: RankState): string {
-  return `${formatRankState(state)} (${state.rankPoints}/${state.pointsToPromote})`;
-}
-
-function rankChangeSentence(initial: RankState, final: RankState, delta: number): string {
-  const initialLabel = detailedLabel(initial);
-  const finalLabel = detailedLabel(final);
-  const points = Math.abs(Math.round(delta)).toLocaleString();
-  if (delta > 50) return `Climbed from ${initialLabel} to ${finalLabel} (+${points} rank points).`;
-  if (delta < -50) return `Fell from ${initialLabel} to ${finalLabel} (-${points} rank points).`;
-  return `Held steady: started at ${initialLabel}, ended at ${finalLabel}.`;
-}
-
-// Rank tier names (Mystic, Sentinel, ...) don't read as ordered on their own,
-// so the compact stat needs an explicit direction cue — never rely on the
-// reader inferring "up" or "down" from the tier name alone.
-function RankDelta({ delta }: { delta: number }) {
-  const direction = delta > 50 ? "up" : delta < -50 ? "down" : "flat";
-  const arrow = direction === "up" ? "▲" : direction === "down" ? "▼" : "–";
-  const signedPoints = `${delta >= 0 ? "+" : "-"}${Math.abs(Math.round(delta)).toLocaleString()}`;
-  return (
-    <span className={`rank-delta is-${direction}`}>
-      {arrow} {signedPoints} pts
-    </span>
-  );
 }
 
 export function KeyPlayersSection({ simulation }: Props) {
@@ -71,7 +42,7 @@ export function KeyPlayersSection({ simulation }: Props) {
                 <p className="key-player-meta">
                   Player #{player.id} · skill {player.skill.toFixed(2)}
                 </p>
-                <dl className="key-player-stats">
+                <dl className="stat-list">
                   <div>
                     <dt>Play rate</dt>
                     <dd>{player.avgGamesPerDay.toFixed(2)} games/day (avg)</dd>

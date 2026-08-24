@@ -1,0 +1,52 @@
+.player-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 4px 0 16px;
+}
+
+.player-picker select {
+  flex: 1;
+  max-width: 420px;
+  background: var(--page-plane);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.player-summary {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--page-plane);
+  margin-bottom: 20px;
+}
+
+.player-summary-sentence {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--gridline);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.game-log-heading {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+}
+
+.result-win {
+  color: var(--status-good);
+  font-weight: 600;
+}
+
+.result-loss {
+  color: var(--status-critical);
+}

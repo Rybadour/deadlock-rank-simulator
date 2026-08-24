@@ -179,6 +179,30 @@
   border-color: var(--baseline);
 }
 
+.stat-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+}
+
+.stat-list dt {
+  color: var(--text-secondary);
+}
+
+.stat-list dd {
+  margin: 0;
+  text-align: right;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-list dd:has(.rank-delta) {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
 .viz-table-scroll {
   max-height: 420px;
   overflow-y: auto;

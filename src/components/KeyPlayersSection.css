@@ -24,46 +24,6 @@
   margin: 0 0 10px;
 }
 
-.key-player-stats {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 4px 10px;
-  margin: 0 0 10px;
-  font-size: 0.8rem;
-}
-
-.key-player-stats dt {
-  color: var(--text-secondary);
-}
-
-.key-player-stats dd {
-  margin: 0;
-  text-align: right;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-
-.key-player-stats dd:has(.rank-delta) {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-}
-
-.rank-delta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
-}
-.rank-delta.is-up {
-  color: var(--status-good);
-}
-.rank-delta.is-down {
-  color: var(--status-critical);
-}
-.rank-delta.is-flat {
-  color: var(--text-secondary);
-}
-
 .key-player-summary {
   margin: 10px 0 0;
   padding-top: 10px;
