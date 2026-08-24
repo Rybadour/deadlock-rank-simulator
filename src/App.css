@@ -1,0 +1,53 @@
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: #f9f9f7;
+  color: #0b0b0b;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0d0d0d;
+    color: #ffffff;
+  }
+}
+
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+.page-header h1 {
+  font-size: 1.6rem;
+  margin: 0 0 8px;
+}
+
+.page-header p {
+  color: #52514e;
+  max-width: 60ch;
+  line-height: 1.5;
+}
+@media (prefers-color-scheme: dark) {
+  .page-header p {
+    color: #c3c2b7;
+  }
+}
+
+.status {
+  color: #52514e;
+}
+
+.status-error {
+  color: #d03b3b;
+}
+
+.charts {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 24px;
+}
